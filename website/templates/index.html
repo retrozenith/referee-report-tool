@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generare Raport Arbitru</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="time"],
+        button,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .hidden {
+            display: none;
+        }
+        footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Generare Raport Arbitru</h2>
+    <form action="/generate_report" method="POST">
+        <label for="referee_name_1">Nume Arbitru 1</label>
+        <input type="text" id="referee_name_1" name="referee_name_1" placeholder="Introduceți numele arbitrului" required>
+        
+        <label for="referee_name_2" class="hidden">Nume Arbitru 2</label>
+        <input type="text" id="referee_name_2" name="referee_name_2" placeholder="Introduceți numele arbitrului" class="hidden">        
+
+        <label for="match_date">Data Meciului</label>
+        <input type="date" id="match_date" name="match_date" required>
+
+        <label for="competition" class="hidden">Competiție</label>
+        <input type="text" id="competition" name="competition" placeholder="Introduceți numele competiției" class="hidden">
+
+        <label for="assistant_referee_1" class="hidden">Arbitru Asistent 1</label>
+        <input type="text" id="assistant_referee_1" name="assistant_referee_1" placeholder="Introduceți numele arbitrului asistent 1" class="hidden">
+
+        <label for="assistant_referee_2" class="hidden">Arbitru Asistent 2</label>
+        <input type="text" id="assistant_referee_2" name="assistant_referee_2" placeholder="Introduceți numele arbitrului asistent 2" class="hidden">
+
+        <label for="fourth_official" class="hidden">Al 4-lea Oficial</label>
+        <input type="text" id="fourth_official" name="fourth_official" placeholder="Introduceți numele celui de-al 4-lea oficial" class="hidden">
+
+        <label for="starting_hour">Ora de Începere</label>
+        <input type="time" id="starting_hour" name="starting_hour" required>
+
+        <label for="team_1">Echipa 1</label>
+        <input type="text" id="team_1" name="team_1" placeholder="Introduceți numele primei echipe" required>
+
+        <label for="team_2">Echipa 2</label>
+        <input type="text" id="team_2" name="team_2" placeholder="Introduceți numele celei de-a doua echipe" required>
+
+        <label for="age_category">Categorie de Vârstă</label>
+        <select id="age_category" name="age_category" required>
+            <option value="U9">U9</option>
+            <option value="U11">U11</option>
+            <option value="U13">U13</option>
+            <option value="U15">U15+</option>
+        </select>
+
+        <button type="submit">Generează Raportul</button>
+    </form>
+</div>
+<footer>
+    <p>Acest instrument a fost realizat de Cristea Florian Victor pentru fiecare arbitru AJF Ilfov. Verificați mereu corectitudinea rapoartelor generate de acest program web.</p>
+</footer>
+</body>
+<script>
+    function toggleFields() {
+        const ageCategory = document.getElementById('age_category').value;
+        const refereeName2Field = document.getElementById('referee_name_2');
+        const refereeName2Label = document.querySelector('label[for="referee_name_2"]');
+        const competitionField = document.getElementById('competition');
+        const assistantReferee1Field = document.getElementById('assistant_referee_1');
+        const assistantReferee2Field = document.getElementById('assistant_referee_2');
+        const fourthOfficialField = document.getElementById('fourth_official');
+
+        const competitionLabel = document.querySelector('label[for="competition"]');
+        const assistantReferee1Label = document.querySelector('label[for="assistant_referee_1"]');
+        const assistantReferee2Label = document.querySelector('label[for="assistant_referee_2"]');
+        const fourthOfficialLabel = document.querySelector('label[for="fourth_official"]');
+
+        if (ageCategory === 'U11' || ageCategory === 'U13') {
+            refereeName2Field.classList.remove('hidden');
+            refereeName2Label.classList.remove('hidden');
+            competitionField.classList.add('hidden');
+            assistantReferee1Field.classList.add('hidden');
+            assistantReferee2Field.classList.add('hidden');
+            fourthOfficialField.classList.add('hidden');
+            competitionLabel.classList.add('hidden');
+            assistantReferee1Label.classList.add('hidden');
+            assistantReferee2Label.classList.add('hidden');
+            fourthOfficialLabel.classList.add('hidden');
+            refereeName2Field.required = true;
+        } else if (ageCategory === 'U15') {
+            refereeName2Field.classList.add('hidden');
+            refereeName2Label.classList.add('hidden');
+            competitionField.classList.remove('hidden');
+            assistantReferee1Field.classList.remove('hidden');
+            assistantReferee2Field.classList.remove('hidden');
+            fourthOfficialField.classList.remove('hidden');
+            competitionLabel.classList.remove('hidden');
+            assistantReferee1Label.classList.remove('hidden');
+            assistantReferee2Label.classList.remove('hidden');
+            fourthOfficialLabel.classList.remove('hidden');
+            refereeName2Field.required = false;
+        } else {
+            refereeName2Field.classList.add('hidden');
+            refereeName2Label.classList.add('hidden');
+            competitionField.classList.add('hidden');
+            assistantReferee1Field.classList.add('hidden');
+            assistantReferee2Field.classList.add('hidden');
+            fourthOfficialField.classList.add('hidden');
+        }
+    }
+    document.getElementById('age_category').addEventListener('change', function() {
+    var ageCategory = this.value;
+    var refereeName2 = document.getElementById('referee_name_2');
+
+    if (ageCategory === 'U9') {
+        refereeName2.removeAttribute('required');  // Make it optional
+    } else {
+        refereeName2.setAttribute('required', 'required');  // Keep it required for other categories
+    }
+     });
+    // Atașează funcția toggleFields la evenimentul de schimbare al selectorului
+    window.onload = function() {
+        document.getElementById('age_category').addEventListener('change', toggleFields);
+        toggleFields(); // Apel inițial pentru a seta vizibilitatea corectă la încărcarea paginii
+    };
+</script>
+</html>

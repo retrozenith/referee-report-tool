@@ -1,0 +1,6 @@
+services:
+  referee-reports-tool:
+      restart: always
+      build: .
+      ports:
+        - 5000:5000
