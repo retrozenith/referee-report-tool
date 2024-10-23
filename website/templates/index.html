@@ -6,28 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generare Raport Arbitru</title>
     <style>
+        :root {
+            --bg-color-light: #f4f4f4;
+            --bg-color-dark: #121212;
+            --text-color-light: #000;
+            --text-color-dark: #fff;
+            --container-bg-light: #fff;
+            --container-bg-dark: #1e1e1e;
+            --input-border-light: #ccc;
+            --input-border-dark: #444;
+            --button-bg-light: #28a745;
+            --button-bg-dark: #3ea749;
+            --button-hover-light: #218838;
+            --button-hover-dark: #2c8b32;
+        }
+
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: var(--bg-color-light);
+            color: var(--text-color-light);
             margin: 0;
             padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
         }
+
         .container {
             max-width: 600px;
             margin: 0 auto;
-            background-color: #fff;
+            background-color: var(--container-bg-light);
             padding: 20px 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-        h2 {
-            text-align: center;
-        }
-        label {
-            font-weight: bold;
-            margin-top: 10px;
-            display: block;
-        }
+
         input[type="text"],
         input[type="date"],
         input[type="time"],
@@ -38,39 +49,155 @@
             padding: 10px;
             margin-top: 5px;
             border-radius: 4px;
-            border: 1px solid #ccc;
+            border: 1px solid var(--input-border-light);
+            margin-bottom: 15px; /* Added margin to add space between input fields */
             font-size: 16px;
+            background-color: var(--container-bg-light);
+            color: var(--text-color-light);
+            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
         }
+
         button {
-            background-color: #28a745;
+            background-color: var(--button-bg-light);
             color: white;
             border: none;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+
         button:hover {
-            background-color: #218838;
+            background-color: var(--button-hover-light);
         }
-        .hidden {
-            display: none;
-        }
+
         footer {
             margin-top: 20px;
             text-align: center;
             font-size: 14px;
-            color: #555;
+            color: var(--text-color-light);
+        }
+
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        body.dark-mode select {
+            background-color: #333;  /* Dark background for dark mode */
+            color: white;            /* White text for better contrast */
+            border: 1px solid #555;   /* Border to match dark mode */
+        }
+
+        body.light-mode select {
+            background-color: white;  /* Default background for light mode */
+            color: black;             /* Black text for light mode */
+            border: 1px solid #ccc;    /* Default light mode border */
+        }
+
+        .container.dark-mode {
+            background-color: var(--container-bg-dark);
+            box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
+
+        input.dark-mode {
+            background-color: var(--container-bg-dark);
+            border-color: var(--input-border-dark);
+            color: var(--text-color-dark);
+        }
+
+        /* For the dark mode styling */
+        body.dark-mode input[type="date"],
+        body.dark-mode input[type="time"] {
+            background-color: #333;   /* Dark background */
+            color: white;             /* White text */
+            border: 1px solid #555;   /* Dark border */
+        }
+
+        /* Styling for input fields (date & time) to change icon color */
+        body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator,
+        body.dark-mode input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);  /* Inverts the icon to white */
+        }
+
+        /* For light mode, keep default */
+        body.light-mode input[type="date"],
+        body.light-mode input[type="time"] {
+            background-color: white;  /* Light background */
+            color: black;             /* Default text color */
+            border: 1px solid #ccc;    /* Default light border */
+        }
+
+        /* Remove filter for light mode */
+        body.light-mode input[type="date"]::-webkit-calendar-picker-indicator,
+        body.light-mode input[type="time"]::-webkit-calendar-picker-indicator {
+            filter: none; /* Keeps the default icon appearance */
+        }
+
+        button.dark-mode {
+            background-color: var(--button-bg-dark);
+        }
+
+        button:hover.dark-mode {
+            background-color: var(--button-hover-dark);
+        }
+
+        footer.dark-mode {
+            color: var(--text-color-dark);
+        }
+
+        /* Flexbox for title and button alignment */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header h2 {
+            margin: 0;
+        }
+
+        /* Style for the icon button */
+        .theme-toggle button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            padding: 0;
+            margin-left: 10px;
+            color: var(--text-color-light);
+            transition: color 0.3s;
+        }
+
+        .theme-toggle button.dark-mode {
+            color: var(--text-color-dark);
+        }
+
+        .theme-toggle button:hover {
+            opacity: 0.7;
+        }
+
+        .hidden {
+           display: none;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>Generare Raport Arbitru</h2>
+    <div class="header">
+        <h2>Generare Raport Arbitru</h2>
+        <div class="theme-toggle">
+            <button id="toggleButton" aria-label="Toggle Dark Mode">🌙</button>
+        </div>
+    </div>
+    
     <form action="/generate_report" method="POST">
         <label for="referee_name_1">Nume Arbitru 1</label>
         <input type="text" id="referee_name_1" name="referee_name_1" placeholder="Introduceți numele arbitrului" required>
-        
+
         <label for="referee_name_2" class="hidden">Nume Arbitru 2</label>
-        <input type="text" id="referee_name_2" name="referee_name_2" placeholder="Introduceți numele arbitrului" class="hidden">        
+        <input type="text" id="referee_name_2" name="referee_name_2" placeholder="Introduceți numele arbitrului" class="hidden">
 
         <label for="match_date">Data Meciului</label>
         <input type="date" id="match_date" name="match_date" required>
@@ -157,22 +284,65 @@
             assistantReferee1Field.classList.add('hidden');
             assistantReferee2Field.classList.add('hidden');
             fourthOfficialField.classList.add('hidden');
+            competitionLabel.classList.add('hidden');
+            assistantReferee1Label.classList.add('hidden');
+            assistantReferee2Label.classList.add('hidden');
+            fourthOfficialLabel.classList.add('hidden');
+            refereeName2Field.required = false;
         }
     }
-    document.getElementById('age_category').addEventListener('change', function() {
-    var ageCategory = this.value;
-    var refereeName2 = document.getElementById('referee_name_2');
 
-    if (ageCategory === 'U9') {
-        refereeName2.removeAttribute('required');  // Make it optional
-    } else {
-        refereeName2.setAttribute('required', 'required');  // Keep it required for other categories
-    }
-     });
-    // Atașează funcția toggleFields la evenimentul de schimbare al selectorului
     window.onload = function() {
         document.getElementById('age_category').addEventListener('change', toggleFields);
-        toggleFields(); // Apel inițial pentru a seta vizibilitatea corectă la încărcarea paginii
+        toggleFields(); // Initial call to set correct field visibility when page loads
     };
+    const toggleButton = document.getElementById('toggleButton');
+    const body = document.body;
+    const container = document.querySelector('.container');
+    const inputs = document.querySelectorAll('input, select, button');
+    const footer = document.querySelector('footer');
+
+    // Function to apply dark or light mode
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            body.classList.add('dark-mode');
+            container.classList.add('dark-mode');
+            footer.classList.add('dark-mode');
+            inputs.forEach(input => input.classList.add('dark-mode'));
+            toggleButton.textContent = '☀️';  // Change to sun icon
+        } else {
+            body.classList.remove('dark-mode');
+            container.classList.remove('dark-mode');
+            footer.classList.remove('dark-mode');
+            inputs.forEach(input => input.classList.remove('dark-mode'));
+            toggleButton.textContent = '🌙';  // Change to moon icon
+        }
+    }
+
+    // Detect system preferences for dark mode
+    const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)");
+
+    // On page load, apply system preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else {
+        applyTheme(prefersDarkScheme.matches ? 'dark' : 'light');
+    }
+
+    // Toggle dark/light mode when the button is clicked
+    toggleButton.addEventListener('click', function () {
+        const currentTheme = body.classList.contains('dark-mode') ? 'dark' : 'light';
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme);  // Save user preference
+    });
+
+    // Listen for changes in system theme preferences
+    prefersDarkScheme.addEventListener('change', (e) => {
+        const newTheme = e.matches ? 'dark' : 'light';
+        applyTheme(newTheme);
+        localStorage.setItem('theme', newTheme);  // Update preference
+    });
 </script>
 </html>
