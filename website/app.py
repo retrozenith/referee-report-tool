@@ -35,6 +35,8 @@ def generate_report():
     assistant_referee_2 = request.form['assistant_referee_2']
     fourth_official = request.form['fourth_official']
     age_category = request.form['age_category']
+    stadium_name = request.form.get('stadium_name')  # Este opțional
+    stadium_locality = request.form.get('stadium_locality')  # Este opțional
 
     # Determine the template based on age category
     if age_category == 'U9':
@@ -53,7 +55,7 @@ def generate_report():
     # Generate the filled PDF
     output_pdf = fill_pdf(template_path, referee_name_1, referee_name_2, match_date, 
                           starting_hour, team_1, team_2, competition,
-                          assistant_referee_1, assistant_referee_2, fourth_official, age_category)
+                          assistant_referee_1, assistant_referee_2, fourth_official, age_category, stadium_locality, stadium_name)
     
     # Return the PDF as a download
     return send_file(output_pdf, as_attachment=True, download_name="referee_report.pdf")
@@ -70,7 +72,7 @@ def format_date_dmy(date_str):
 
 # Function to fill the PDF using pdfrw and ReportLab
 def fill_pdf(template_path, referee_name_1, referee_name_2, match_date, starting_hour, team_1, team_2, 
-             competition, assistant_referee_1, assistant_referee_2, fourth_official, age_category):
+             competition, assistant_referee_1, assistant_referee_2, fourth_official, age_category, stadium_locality, stadium_name):
 
     # Create an overlay PDF with the text to be placed on the template
     packet = BytesIO()
@@ -117,6 +119,9 @@ def fill_pdf(template_path, referee_name_1, referee_name_2, match_date, starting
         can.drawString(163, 338, f"{assistant_referee_1}")  # Assistant Referee 1
         can.drawString(163, 321, f"{assistant_referee_2}")  # Assistant Referee 2
         can.drawString(163, 306, f"{fourth_official}")  # 4th Match Official
+
+        can.drawString(163, 426, f"{stadium_locality}")
+        can.drawString(159, 399, f"{stadium_name}")
 
         # Add fixed location text for all reports (e.g., location)
         can.drawString(490, 353, f"Ilfov")

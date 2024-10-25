@@ -193,6 +193,9 @@
     </div>
     
     <form action="/generate_report" method="POST">
+        <label for="competition" class="hidden">Competiție</label>
+        <input type="text" id="competition" name="competition" placeholder="Introduceți numele competiției" class="hidden">
+
         <label for="referee_name_1">Nume Arbitru 1</label>
         <input type="text" id="referee_name_1" name="referee_name_1" placeholder="Introduceți numele arbitrului" required>
 
@@ -202,8 +205,13 @@
         <label for="match_date">Data Meciului</label>
         <input type="date" id="match_date" name="match_date" required>
 
-        <label for="competition" class="hidden">Competiție</label>
-        <input type="text" id="competition" name="competition" placeholder="Introduceți numele competiției" class="hidden">
+        <div id="stadium_fields" class="hidden">
+            <label for="stadium_name">Nume Stadion</label>
+            <input type="text" id="stadium_name" name="stadium_name" placeholder="Introduceți numele stadionului">
+
+            <label for="stadium_locality">Localitatea Stadionului</label>
+            <input type="text" id="stadium_locality" name="stadium_locality" placeholder="Introduceți localitatea stadionului">
+        </div>
 
         <label for="assistant_referee_1" class="hidden">Arbitru Asistent 1</label>
         <input type="text" id="assistant_referee_1" name="assistant_referee_1" placeholder="Introduceți numele arbitrului asistent 1" class="hidden">
@@ -217,10 +225,10 @@
         <label for="starting_hour">Ora de Începere</label>
         <input type="time" id="starting_hour" name="starting_hour" required>
 
-        <label for="team_1">Echipa 1</label>
+        <label for="team_1">Echipa Gazdă</label>
         <input type="text" id="team_1" name="team_1" placeholder="Introduceți numele primei echipe" required>
 
-        <label for="team_2">Echipa 2</label>
+        <label for="team_2">Echipa Oaspete</label>
         <input type="text" id="team_2" name="team_2" placeholder="Introduceți numele celei de-a doua echipe" required>
 
         <label for="age_category">Categorie de Vârstă</label>
@@ -252,6 +260,7 @@
         const assistantReferee1Label = document.querySelector('label[for="assistant_referee_1"]');
         const assistantReferee2Label = document.querySelector('label[for="assistant_referee_2"]');
         const fourthOfficialLabel = document.querySelector('label[for="fourth_official"]');
+	const stadiumFields = document.getElementById('stadium_fields');
 
         if (ageCategory === 'U11' || ageCategory === 'U13') {
             refereeName2Field.classList.remove('hidden');
@@ -265,6 +274,7 @@
             assistantReferee2Label.classList.add('hidden');
             fourthOfficialLabel.classList.add('hidden');
             refereeName2Field.required = true;
+            stadiumFields.classList.add('hidden');
         } else if (ageCategory === 'U15') {
             refereeName2Field.classList.add('hidden');
             refereeName2Label.classList.add('hidden');
@@ -277,6 +287,7 @@
             assistantReferee2Label.classList.remove('hidden');
             fourthOfficialLabel.classList.remove('hidden');
             refereeName2Field.required = false;
+    	    stadiumFields.classList.remove('hidden');
         } else {
             refereeName2Field.classList.add('hidden');
             refereeName2Label.classList.add('hidden');
@@ -289,6 +300,7 @@
             assistantReferee2Label.classList.add('hidden');
             fourthOfficialLabel.classList.add('hidden');
             refereeName2Field.required = false;
+            stadiumFields.classList.add('hidden');
         }
     }
 
